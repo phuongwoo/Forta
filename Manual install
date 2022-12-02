@@ -1,0 +1,87 @@
+//////////////////////////// Install forta
+
+$ sudo curl https://dist.forta.network/pgp.public -o /usr/share/keyrings/forta-keyring.asc -s
+$ echo 'deb [signed-by=/usr/share/keyrings/forta-keyring.asc] https://dist.forta.network/repositories/apt stable main' | sudo tee -a /etc/apt/sources.list.d/forta.list
+$ sudo apt-get update
+$ sudo apt-get install forta
+
+root@vmi844997:~# forta init --passphrase <password>
+Scanner address: 0x1cFeD528243b4398361D3FB7BF37E92Ef6D7e70A
+
+Successfully initialized at /root/.forta
+- Please make sure that all of the values in config.yml are set correctly.
+- Please fund your scanner address with some MATIC.
+- Please enable it for the chain ID in your config by doing 'forta register --owner-address <your_owner_wallet_address>'.
+root@vmi844997:~#
+
+---------------- Create system service
+
+sudo tee /etc/systemd/system/forta.service > /dev/null <<EOF
+[Unit]
+Description=Forta Node
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/
+ExecStart=$(which forta) run --passphrase="password"
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=10000
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+mkdir /etc/systemd/system/forta.service.d && touch /etc/systemd/system/forta.service.d/env.conf
+nano /etc/systemd/system/forta.service.d/env.conf
+
+[Service]
+Environment="FORTA_DIR=/root/.forta"
+Environment="FORTA_PASSPHRASE=password"
+
+///////////////////////// Configure forta
+
+sed -i '3,3 s/\(chainId: \).*/\1137/g' config.yml
+API_KEY=https://polygon-mainnet.g.alchemy.com/v2/8zRAotqm0KKe7TNKyDOCTGo1uZ3UeoTc
+sed -i '8,8 s|\(.url: \).*|\1'$API_KEY'|g' config.yml
+sed -i '12 s/jsonRpc:/enabled: false/g' config.yml
+sed -i '13d' config.yml
+
+////////////////////////////////// Configure in Alchemy
+------------ alchemy main
+https://dashboard.alchemyapi.io/apps
+
+PWOO_Forta
+Key: 8zRAotqm0KKe7TNKyDOCTGo1uZ3UeoTc
+HTTP: https://polygon-mainnet.g.alchemy.com/v2/8zRAotqm0KKe7TNKyDOCTGo1uZ3UeoTc
+Websocket: wss://polygon-mainnet.g.alchemy.com/v2/8zRAotqm0KKe7TNKyDOCTGo1uZ3UeoTc
+
+------------- alchemy backup
+3Z2oTz-0SmgZoSYU1MQrOqc6le-oJRih
+url: https://polygon-mainnet.g.alchemy.com/v2/3Z2oTz-0SmgZoSYU1MQrOqc6le-oJRih
+
+////////////////////////// Start service
+
+sudo systemctl daemon-reload
+sudo systemctl enable forta
+
+root@vmi837835:~#forta init --passphrase passord
+
+
+root@vmi844997:~#forta register --passphrase password --owner-address 0xf62489e40051161ab4cd7b1b4d09Ed5621D2b***
+
+Sending a transaction to register your scan node to chain 137...
+Successfully sent the transaction!
+
+Please ensure that https://polygonscan.com/tx/0x4ca9be620b64d8c523c400e9d9b91e095a439a78dfd93688c72b71ca86e62d96 succeeds before you do 'forta run'. This can take a while depending on the network load.
+root@vmi844997:~/.forta#
+
+sudo systemctl enable forta
+sudo systemctl start forta 
+--------- check log
+
+journalctl -u forta.service -f -o cat
+
+
