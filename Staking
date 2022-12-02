@@ -1,0 +1,33 @@
+Scan node
+0x1cFeD528243b4398361D3FB7BF37E92Ef6D7e70A
+
+0xf8548aAC3a9973FAE5355D5F6207d692EF402045
+
+0x7CB45691884c48849e54A2E047f613a53B7C65F3
+
+------------- how many Forta node
+https://dune.com/sliceanalytics/forta
+
+-------------- Stake
+https://docs.forta.network/en/latest/stake-on-scan-node/
+
+https://app.forta.network/staking
+
+https://app.forta.network/scan-node/0x1cFeD528243b4398361D3FB7BF37E92Ef6D7e70A		
+
+https://app.forta.network/scan-node/0xf8548aAC3a9973FAE5355D5F6207d692EF402045		
+
+https://app.forta.network/scan-node/0x7CB45691884c48849e54A2E047f613a53B7C65F3	
+
+---------------- Explorer
+
+https://explorer.forta.network/network
+
+---------------- Checking
+
+
+forta status --show all --format oneline
+
+SLA
+http://alt.pp.ua/forta/
+
